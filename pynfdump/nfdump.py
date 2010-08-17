@@ -254,7 +254,8 @@ class Dumper:
 	# Indices used in nfdump 1.6:
 	# 
 	#    ts,te,td    time records: t-start, t-end, duration
-	#    sa,da       src dst address sp,dp       src, dst port
+	#    sa,da       src dst address 
+	#    sp,dp       src, dst port
 	#    pr          protocol PF_INET or PF_INET6
 	#    flg         TCP Flags:
 	#                   000001 FIN.
@@ -297,17 +298,16 @@ class Dumper:
                 'first':        strptime(parts[0], "%Y-%m-%d %H:%M:%S"),
                 'last':         strptime(parts[1], "%Y-%m-%d %H:%M:%S"),
                 'dur':    	parts[2],
-#                'prot':         self.protocols.get(parts[5], parts[5]),
-                #'sa0':          parts[6],
-                #'sa1':          parts[7],
-                #'sa2':          parts[8],
-#                'srcip':        IP(parts[9]),
-#                'srcport':      parts[10],
-                #'da0':          parts[11],
-                #'da1':          parts[12],
-                #'da2':          parts[13],
-#                'dstip':          IP(parts[14]),
-#                'dstport':      parts[15],
+                'srcip':	IP(parts[3]),
+                'dstip':	IP(parts[4]),
+                'srcport':      parts[5],
+                'dstport':      parts[6],
+#                'prot':         self.protocols.get(parts[7], parts[7]),
+                'flags':	parts[8],
+#                'stos':	parts[9],
+#                'ipkt':	parts[10],
+ 
+
 #                'srcas':        parts[16],
 #                'dstas':        parts[17],
 #                'input':        parts[18],
