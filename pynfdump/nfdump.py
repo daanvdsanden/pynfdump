@@ -193,7 +193,7 @@ class Dumper:
         cmd = []
         if self.remote_host:
             cmd = ['ssh', self.remote_host]
-        cmd.extend(['nfdump', '-q', '-o', 'pipe'])
+        cmd.extend(['nfdump', '-q', '-o', 'csv'])
         if filterfile:
             cmd.extend(['-f', filterfile])
         else:
@@ -241,42 +241,82 @@ class Dumper:
             return self.parse_search(out)
 
     def parse_search(self, out):
-        #    snprintf(data_string, STRINGSIZE-1 ,"%i|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u|%llu|%llu",
-        #                0 af, 1 r->first, 2 r->msec_first ,3 r->last, 4 r->msec_last, 5 r->prot,
-        #                6 sa[0], 7 sa[1], 8 sa[2], 9 sa[3], 10 r->srcport, 11 da[0], 12 da[1], 13 da[2], 14 da[3], 15 r->dstport,
-        #                16 r->srcas, 17 r->dstas, 18 r->input, 19 r->output,
-        #                20 r->tcp_flags, 21 r->tos, 22 (unsigned long long)r->dPkts, 23 (unsigned long long)r->dOctets);
-
+	# The  csv  output  format  is intended to be read by another program for further processing. As an example, see the parse_csv.pl
+	# Perl program.  The cvs output format consists of one or more output blocks and one summary block. Each output block starts with
+	# a  cvs index line followed by the cvs record lines. The index lines describes the order, how each following record is composed.
+	# 
+	# Example:
+	#    Index line:   ts,te,td,sa,da,sp,dp,pr,...
+	#    Record line:  2004-07-11 10:30:00,2004-07-11 10:30:10,10.010,...
+	# 
+	# All records are in ASCII readable form. Numbers are not scaled, so each line can easly be parsed.
+	# 
+	# Indices used in nfdump 1.6:
+	# 
+	#    ts,te,td    time records: t-start, t-end, duration
+	#    sa,da       src dst address sp,dp       src, dst port
+	#    pr          protocol PF_INET or PF_INET6
+	#    flg         TCP Flags:
+	#                   000001 FIN.
+	#                   000010 SYN
+	#                   000100 RESET
+	#                   001000 PUSH
+	#                   010000 ACK
+	#                   100000 URGENT
+	#                   e.g. 6 => SYN + RESET
+	#    fwd         forwarding status
+	#    stos        src tos
+	#    ipkt,ibyt   input packets/bytes
+	#    opkt,obyt   output packets, bytes
+	#    in,out      input/output interface SNMP number
+	#    sas,das     src, dst AS
+	#    smk,dmk     src, dst mask
+	#    dtos        dst tos
+	#    dir         direction
+	#    nh,nhb      nethop IP address, bgp next hop IP
+	#    svln,dvln   src, dst vlan id
+	#    ismc,odmc   input src, output dst MAC
+	#    idmc,osmc   input dst, output src MAC
+	#    mpls1,mpls2 MPLS label 1-10
+	#    mpls3,mpls4
+	#    mpls5,mpls6
+	#    mpls7,mpls8
+	#    mpls9,mpls10
+	#    ra          router IP
+	#    eng         router engine type/id
+	# 
+	# See parse_csv.pl for more details.
+    
         for line in out:
-            parts = line.split("|")
+            parts = line.split(",")
             parts = [int(x) for x in parts]
             if not len(parts) > 20:
                 continue
             row = {
-                'af':           parts[0],
-                'first':        fromtimestamp(parts[1]),
+#                'af':           parts[0],
+#                'first':        fromtimestamp(parts[1]),
                 #'msec_first':   parts[2],
-                'last':         fromtimestamp(parts[3]),
+#                'last':         fromtimestamp(parts[3]),
                 #'msec_last':    parts[4],
-                'prot':         self.protocols.get(parts[5], parts[5]),
+#                'prot':         self.protocols.get(parts[5], parts[5]),
                 #'sa0':          parts[6],
                 #'sa1':          parts[7],
                 #'sa2':          parts[8],
-                'srcip':        IP(parts[9]),
-                'srcport':      parts[10],
+#                'srcip':        IP(parts[9]),
+#                'srcport':      parts[10],
                 #'da0':          parts[11],
                 #'da1':          parts[12],
                 #'da2':          parts[13],
-                'dstip':          IP(parts[14]),
-                'dstport':      parts[15],
-                'srcas':        parts[16],
-                'dstas':        parts[17],
-                'input':        parts[18],
-                'output':       parts[19],
-                'flags':        parts[20],
-                'tos':          parts[21],
-                'packets':      parts[22],
-                'bytes':        parts[23],
+#                'dstip':          IP(parts[14]),
+#                'dstport':      parts[15],
+#                'srcas':        parts[16],
+#                'dstas':        parts[17],
+#                'input':        parts[18],
+#                'output':       parts[19],
+#                'flags':        parts[20],
+#                'tos':          parts[21],
+#                'packets':      parts[22],
+#                'bytes':        parts[23],
             }
             yield row
 
