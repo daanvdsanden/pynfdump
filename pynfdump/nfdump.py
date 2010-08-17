@@ -10,7 +10,7 @@ Python frontend to the nfdump CLI
 import os
 from dateutil.parser import parse as parse_date
 import datetime
-fromtimestamp = datetime.datetime.fromtimestamp
+fromtimestamp = datetime.datetime.strptime
 
 from subprocess import Popen, PIPE
 import select
@@ -294,10 +294,9 @@ class Dumper:
                 continue
             row = {
 #                'af':           parts[0],
-#                'first':        fromtimestamp(parts[1]),
-                #'msec_first':   parts[2],
-#                'last':         fromtimestamp(parts[3]),
-                #'msec_last':    parts[4],
+                'first':        strptime(parts[0], "%Y-%m-%d %H:%M:%S"),
+                'last':         strptime(parts[1], "%Y-%m-%d %H:%M:%S"),
+                'dur':    	parts[2],
 #                'prot':         self.protocols.get(parts[5], parts[5]),
                 #'sa0':          parts[6],
                 #'sa1':          parts[7],
