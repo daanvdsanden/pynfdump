@@ -1,2 +1,5 @@
-dateutil
+python-dateutil
 IPy
+
+[docs]
+sphinx

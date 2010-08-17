@@ -1,3 +1,4 @@
+
 # nfdump.py
 # Copyright (C) 2008 Justin Azoff JAzoff@uamail.albany.edu
 #
@@ -10,7 +11,7 @@ Python frontend to the nfdump CLI
 import os
 from dateutil.parser import parse as parse_date
 import datetime
-fromtimestamp = datetime.datetime.strptime
+strptime = datetime.datetime.strptime
 
 from subprocess import Popen, PIPE
 import select
@@ -287,10 +288,10 @@ class Dumper:
 	#    eng         router engine type/id
 	# 
 	# See parse_csv.pl for more details.
-    
+        # ts,te,td,sa,da,sp,dp,pr,flg,fwd,stos,ipkt,ibyt,opkt,obyt,in,out,sas,das,smk,dmk,dtos,dir,nh,nhb,svln,dvln,ismc,odmc,idmc,osmc,mpls1,mpls2,mpls3,mpls4,mpls5,mpls6,mpls7,mpls8,mpls9,mpls10,ra,eng
+        # 2010-08-17 12:23:40,2010-08-17 12:23:43,2.982,85.185.206.152,85.184.4.167,8232,445,TCP,....S.,0,0,116,5568,0,0,0,0,0,0,0,0,0,0,85.184.5.14,0.0.0.0,0,0,00:00:00:00:00:00,00:00:00:00:00:00,00:00:00:00:00:00,00:00:00:00:00:00,0-0-0,0-0-0,0-0-0,0-0-0,0-0-0,0-0-0,0-0-0,0-0-0,0-0-0,0-0-0,85.184.4.5,0/0    
         for line in out:
             parts = line.split(",")
-            parts = [int(x) for x in parts]
             if not len(parts) > 20:
                 continue
             row = {
@@ -303,39 +304,40 @@ class Dumper:
                 'dstport':      parts[6],
                 'prot':         self.protocols.get(parts[7], parts[7]),
                 'flags':	parts[8],
-                'tos':	 	parts[9],
-                'packets':	 parts[10],
-                'bytes':	 parts[11],
-#                'opkt':	 parts[12],
-#                'obyte':	 parts[13],
-                'input':	parts[14],
-                'output':	parts[15],
-                'srcas':	parts[16],
-                'dstas':	parts[17],
-                'smk':		parts[18],
-                'dmk':		parts[19],
-#                'dtos':	parts[20],
-#                'dir':		parts[21],
-                'nexthop':	parts[22],
-#                'nhb':		parts[23],
-#                'svln':	parts[24],
-#                'dvln':	parts[25],
-#                'ismc':	parts[26],
-#                'odmc':	parts[27],
-#                'idmc':	parts[28],
-#                'osmc':	parts[29],
-#                'mpls1':	parts[30],
-#                'mpls2':	parts[31],
-#                'mpls3':	parts[32],
-#                'mpls4':	parts[33],
-#                'mpls5':	parts[34],
-#                'mpls6':	parts[35],
-#                'mpls7':	parts[36],
-#                'mpls8':	parts[37],
-#                'mpls9':	parts[38],
-#                'mpls10':	parts[39],
-#                'ra':		parts[40],
-#                'eng':		parts[41],
+#                'fwd':		parts[9],
+                'tos':	 	parts[10],
+                'packets':	 parts[11],
+                'bytes':	 parts[12],
+#                'opkt':	 parts[13],
+#                'obyte':	 parts[14],
+                'input':	parts[15],
+                'output':	parts[16],
+                'srcas':	parts[17],
+                'dstas':	parts[18],
+                'smk':		parts[19],
+                'dmk':		parts[20],
+#                'dtos':	parts[21],
+#                'dir':		parts[22],
+                'nexthop':	IP(parts[23]),
+#                'nhb':		IP(parts[24]),
+#                'svln':	parts[25],
+#                'dvln':	parts[26],
+#                'ismc':	parts[27],
+#                'odmc':	parts[28],
+#                'idmc':	parts[29],
+#                'osmc':	parts[30],
+#                'mpls1':	parts[31],
+#                'mpls2':	parts[32],
+#                'mpls3':	parts[33],
+#                'mpls4':	parts[34],
+#                'mpls5':	parts[35],
+#                'mpls6':	parts[36],
+#                'mpls7':	parts[37],
+#                'mpls8':	parts[38],
+#                'mpls9':	parts[39],
+#                'mpls10':	parts[40],
+#                'ra':		parts[41],
+#                'eng':		parts[42],
             }
             yield row
 
