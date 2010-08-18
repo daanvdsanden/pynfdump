@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: pynfdump
-Version: 0.3.2dev
+Version: 0.3.3dev
 Summary: python interface to nfdump
 Home-page: http://packages.python.org/pynfdump
 Author: Justin Azoff

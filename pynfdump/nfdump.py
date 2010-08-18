@@ -336,7 +336,7 @@ class Dumper:
 #                'mpls8':	parts[38],
 #                'mpls9':	parts[39],
 #                'mpls10':	parts[40],
-#                'ra':		parts[41],
+                'ra':		parts[41],
 #                'eng':		parts[42],
             }
             yield row
